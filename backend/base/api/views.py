@@ -90,7 +90,7 @@ def deleteBook(request, id):
     # user = User.objects.get(id=1) #needs to be changed
     book = Book.objects.get(
         id=id)
-    book.delete
+    book.delete()
     serializer = BookSerializer(book)
     return Response(serializer.data)
 
