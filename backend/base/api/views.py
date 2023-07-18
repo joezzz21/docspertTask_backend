@@ -127,7 +127,7 @@ def deletePage(request, id):
     # user = User.objects.get(id=1) #needs to be changed
     page = Page.objects.get(
         id=id)
-    page.delete
+    page.delete()
     serializer = PageSerializer(page)
     return Response(serializer.data)
 
