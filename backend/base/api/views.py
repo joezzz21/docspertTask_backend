@@ -7,6 +7,8 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework_simplejwt.views import TokenObtainPairView
 
+from django.contrib.auth.hashers import make_password
+
 
 from .serializers import BookSerializer, PageSerializer, UserSerializer
 from base.models import Book, User, Page
@@ -134,7 +136,12 @@ def deletePage(request, id):
 
 @api_view(['POST'])
 def createUser(request):
-    user = User.objects.create(
-        username=request.data['username'], password=request.data['password'], role=request.data['role'], name=request.data['name'])
-    serializer = UserSerializer(user)
-    return Response(serializer.data)
+    userfound = User.objects.filter(username=request.data['username']).values()
+    if not userfound:
+        hashed = make_password(request.data['password'])
+        user = User.objects.create(
+            username=request.data['username'], password=hashed, role=request.data['role'], name=request.data['name'])
+        serializer = UserSerializer(user)
+        return Response(serializer.data)
+    else:
+        return Response("Username already exists", 401)

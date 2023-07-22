@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin, UserManager
+from django.contrib.auth.hashers import make_password
 
 
 # Create your models here.
@@ -10,7 +11,9 @@ class CustomUserManager (UserManager):
         #     raise ValueError("You have not provided a valid e-mail address")
         # email = self.normalize_email(email)
         user = self.model(username=username, **extra_fields)
-        user.set_password(password)
+        hashed = make_password(password)
+        print(hashed)
+        user.set_password(hashed)
         user.save(using=self._db)
         return user
 
